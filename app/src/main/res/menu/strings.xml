@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    >
+
+    <item
+        android:id="@+id/action_search"
+        android:title="Search"
+        app:showAsAction="always"
+        android:orderInCategory="200"
+        android:icon="@drawable/ic_action_search"
+        />
+
+    <item
+        android:id="@+id/action_setting"
+        android:title="Settings"
+        app:showAsAction="always"
+        android:orderInCategory="300"
+        android:icon="@drawable/ic_action_settings"
+        />
+
+
+    <item
+        android:id="@+id/action_help"
+        android:title="Help"
+        android:orderInCategory="500"
+        />
+
+    <item
+        android:id="@+id/action_favourite"
+        android:title="Favorite"
+        android:orderInCategory="400"/>
+
+    <item
+        android:id="@+id/action_exit"
+        android:title="Exit"
+        android:orderInCategory="600"
+        />
+</menu>
+
