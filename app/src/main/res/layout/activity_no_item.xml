@@ -12,24 +12,22 @@
 
 
     <ImageView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@drawable/rtz_music_player_logo"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@drawable/empty_item_icon"
         android:scaleX="0.8"
         android:scaleY="0.8"
         android:layout_gravity="center"
         />
 
     <TextView
-        android:layout_marginTop="32dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="NEPALI MUSIC PLAYER"
-        android:textSize="20sp"
-        android:textColor="#817D7D"
+        android:text="Oops..! No Item "
+        android:textSize="14sp"
+        android:textColor="#514F4F"
         android:textAlignment="center"
-        android:fontFamily="sans-serif-condensed-light"
-        android:textFontWeight="400"
+        android:textStyle="normal"
         />
 
 </LinearLayout>

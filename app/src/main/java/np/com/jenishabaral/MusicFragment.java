@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.media.MediaMetadataRetriever;
@@ -105,8 +106,6 @@ public class MusicFragment extends Fragment {
         // fetching musics from local storage.
 
         music_list = new ArrayList<>();
-
-
         Uri uri          = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
         String selection = MediaStore.Audio.Media.IS_MUSIC + "!=0" ;
         String sortOrder = MediaStore.Audio.Media.TITLE + " ASC";
@@ -117,14 +116,12 @@ public class MusicFragment extends Fragment {
             if(cursor.moveToFirst()){
 
                 do {
-                    String name = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
+                    String name   = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DISPLAY_NAME));
                     String artist = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.ARTIST));
 
 
                 // this one will be played as a song or not?
                     String uri_data = cursor.getString(cursor.getColumnIndex(MediaStore.Audio.Media.DATA));
-
-
 
 
                     Music musics = new Music(name,artist,uri_data);
@@ -134,11 +131,20 @@ public class MusicFragment extends Fragment {
             }
             cursor.close();
         }
-
         MusicAdapter musicAdapter = new MusicAdapter(music_list);
-        recycler.setAdapter(musicAdapter);
-        musicAdapter.notifyDataSetChanged();
+
+        if(musicAdapter.getItemCount() > 0){
+            recycler.setAdapter(musicAdapter);
+            musicAdapter.notifyDataSetChanged();
+        }else{
+            Toast.makeText(getActivity(), "Oops....No musics found!", Toast.LENGTH_SHORT).show();
+            Intent intent = new Intent(getActivity(), NoItemActivity.class);
+            startActivity(intent);
+
+        }
     }
+
+
 
 
 
@@ -171,8 +177,12 @@ public class MusicFragment extends Fragment {
 
 
         MusicStoryAdapter musicStoryAdapter = new MusicStoryAdapter(music_story_list);
-        recyclerStory.setAdapter(musicStoryAdapter);
-        musicStoryAdapter.notifyDataSetChanged();
+
+
+        if(musicStoryAdapter.getItemCount() > 0){
+            recyclerStory.setAdapter(musicStoryAdapter);
+            musicStoryAdapter.notifyDataSetChanged();
+        }
     }
 
 
