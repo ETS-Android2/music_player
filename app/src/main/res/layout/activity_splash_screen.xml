@@ -14,20 +14,21 @@
     <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/ic_playmusic"
+        android:src="@drawable/rtz_music_player_logo"
         android:scaleX="0.8"
         android:scaleY="0.8"
         android:layout_gravity="center"
         />
 
     <TextView
-        android:layout_marginTop="64dp"
-        android:layout_width="wrap_content"
+        android:layout_marginTop="32dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="GOOGLE PLAY"
+        android:text="NEPALI PLAYER"
         android:textSize="30sp"
         android:textColor="#817D7D"
-       android:fontFamily="sans-serif-condensed-light"
+        android:textAlignment="center"
+        android:fontFamily="sans-serif-condensed-light"
         android:textFontWeight="400"
         />
 
