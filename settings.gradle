@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = 'GoogleMusic'
+rootProject.name = 'NepaliMusicPlayer'

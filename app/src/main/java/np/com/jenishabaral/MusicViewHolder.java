@@ -1,11 +1,9 @@
 package np.com.jenishabaral;
 
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -26,25 +24,14 @@ public class MusicViewHolder extends RecyclerView.ViewHolder {
           image=itemView.findViewById(R.id.image);
 
 
-
-
           text1.setOnClickListener(new View.OnClickListener() {
               @Override
               public void onClick(View v) {
-                  if(mMusic!=null)
-                  {
-//                      Toast.makeText(itemView.getContext(), "Clicked:\t" +mMusic.getSong(), Toast.LENGTH_SHORT).show();
-                      Intent intent= new Intent(itemView.getContext(),ActivityMusic.class);
+                      Intent intent= new Intent(itemView.getContext(), PlayingMusicActivity.class);
                       intent.putExtra("selected", mMusic);
                       intent.putExtra("musicP", mMusic.mySongs);
                       itemView.getContext().startActivity(intent);
-                  }
 
-                  else
-                  {
-                      Toast.makeText(itemView.getContext(), "No content to show", Toast.LENGTH_SHORT).show();
-
-                  }
               }
           });
 
@@ -52,7 +39,7 @@ public class MusicViewHolder extends RecyclerView.ViewHolder {
     }
 
 
-    public void setdata1(Music musicStory)
+    public void setDataMusicStory(Music musicStory)
 
     {
         text1.setText(musicStory.song);
@@ -60,7 +47,7 @@ public class MusicViewHolder extends RecyclerView.ViewHolder {
 
     }
 
-    public void setdata2(Music music)
+    public void setDataMusic(Music music)
     {
         mMusic=music;
         text1.setText(music.song);

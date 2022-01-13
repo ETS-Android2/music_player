@@ -28,7 +28,7 @@ public class MusicStoryAdapter extends RecyclerView.Adapter<MusicViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull MusicViewHolder holder, int position) {
-        holder.setdata1(musicStory.get(position));
+        holder.setDataMusicStory(musicStory.get(position));
 
     }
 

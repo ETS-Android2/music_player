@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.media.MediaPlayer;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -12,17 +11,13 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.LinearInterpolator;
 import android.view.animation.RotateAnimation;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.io.File;
-import java.io.IOException;
 
-
-public class ActivityMusic extends AppCompatActivity {
+public class PlayingMusicActivity extends AppCompatActivity {
     private static final String TAG = "ActivityMusic";
 
     //declaring of class objects
@@ -34,8 +29,6 @@ public class ActivityMusic extends AppCompatActivity {
     RotateAnimation anim;
     private SeekBar seekBar;
     private Handler mHandler = new Handler();
-
-
     public  int count =0;
 
     //end declaring of class objects
@@ -55,6 +48,8 @@ public class ActivityMusic extends AppCompatActivity {
         timerStart = findViewById(R.id.timerStart);
         timerEnd = findViewById(R.id.timerEnd);
 
+
+
         Intent intent = getIntent();
         music = (Music) intent.getSerializableExtra("selected");
 
@@ -68,7 +63,7 @@ public class ActivityMusic extends AppCompatActivity {
             public void onCompletion(MediaPlayer mediaPlayer) {
                 imageViewMusic.setAnimation(null);
                 pause.setImageResource(R.drawable.ic_play_arrow_black_24dp);
-                Toast.makeText(getApplicationContext(), "Click to play.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Click again to play.", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -83,15 +78,11 @@ public class ActivityMusic extends AppCompatActivity {
         }
 
 
-
-
         //Animation
         animateWhilePlaying();
 
-
         //seekbar
         setSeekBar();
-
 
         //declaring function
         declare();
@@ -101,12 +92,10 @@ public class ActivityMusic extends AppCompatActivity {
 
         // try catch block for logical codes
 
-        ActivityMusic.this.runOnUiThread(new Runnable() {
+        PlayingMusicActivity.this.runOnUiThread(new Runnable() {
 
             @Override
             public void run() {
-
-
 
                 if(mediaPlayer != null){
                     int mCurrentPosition = mediaPlayer.getCurrentPosition();
@@ -212,7 +201,6 @@ public class ActivityMusic extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-
     }
 
     @Override
@@ -231,7 +219,7 @@ public class ActivityMusic extends AppCompatActivity {
                 int x = (int) Math.ceil(progress / 1000f);
 
                 if (x == 0 && mediaPlayer != null && !mediaPlayer.isPlaying()){
-                    ActivityMusic.this.seekBar.setProgress(0);
+                    PlayingMusicActivity.this.seekBar.setProgress(0);
 
                 }
             }

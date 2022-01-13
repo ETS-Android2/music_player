@@ -61,7 +61,9 @@ public class MusicFragment extends Fragment {
 
     TextView  playListSong,playListSongArtist;
     ImageView playListImage ;
-    ImageView cancelAudioPlaying;
+    ImageView cancelAudioPlaying,pausePlay;
+    MusicAdapter musicAdapter;
+    int count =0;
 
     @Nullable
     @Override
@@ -84,6 +86,7 @@ public class MusicFragment extends Fragment {
         playListImage = view.findViewById(R.id.playListImage);
         bottomNavigationView = view.findViewById(R.id.bottomNavBar);
         cancelAudioPlaying = view.findViewById(R.id.cancelAudioPlaying);
+        pausePlay = view.findViewById(R.id.playAudioPlaying);
 
 
         recycler.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -94,7 +97,6 @@ public class MusicFragment extends Fragment {
 
         recyclerStory=view.findViewById(R.id.recyclerStory);
         recyclerStory.setLayoutManager(new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false));
-
 
         checkPermission(Manifest.permission.READ_EXTERNAL_STORAGE, READ_EXTERNAL_STORAGE_PERMISSION);
 
@@ -131,19 +133,17 @@ public class MusicFragment extends Fragment {
             }
             cursor.close();
         }
-        MusicAdapter musicAdapter = new MusicAdapter(music_list);
+         musicAdapter = new MusicAdapter(music_list);
 
         if(musicAdapter.getItemCount() > 0){
             recycler.setAdapter(musicAdapter);
             musicAdapter.notifyDataSetChanged();
         }else{
             Toast.makeText(getActivity(), "Oops....No musics found!", Toast.LENGTH_SHORT).show();
-            Intent intent = new Intent(getActivity(), NoItemActivity.class);
-            startActivity(intent);
+            noMusicItemActivity();
 
         }
     }
-
 
 
 
@@ -177,8 +177,6 @@ public class MusicFragment extends Fragment {
 
 
         MusicStoryAdapter musicStoryAdapter = new MusicStoryAdapter(music_story_list);
-
-
         if(musicStoryAdapter.getItemCount() > 0){
             recyclerStory.setAdapter(musicStoryAdapter);
             musicStoryAdapter.notifyDataSetChanged();
@@ -211,47 +209,74 @@ public class MusicFragment extends Fragment {
                     playListImage.setAnimation(anim);
 
                     try {
-                        String musicSingleItem =  music_list.get(0).getMySongs();
-                        mediaPlayer.setDataSource(getContext(),Uri.parse(musicSingleItem));
-                        mediaPlayer.prepare();
-                        mediaPlayer.start();
 
-                        String artistName =  music_list.get(0).getArtist();
-                        String musicName =  music_list.get(0).getSong();
+                        if(musicAdapter.getItemCount() > 0){
+                            String musicSingleItem =  music_list.get(0).getMySongs();
+                            mediaPlayer.setDataSource(getActivity(),Uri.parse(musicSingleItem));
+                            mediaPlayer.prepare();
+                            mediaPlayer.start();
 
-                        playListSong.setText(musicName);
-                        playListSongArtist.setText(artistName);
+                            String artistName =  music_list.get(0).getArtist();
+                            String musicName =  music_list.get(0).getSong();
+
+                            playListSong.setText(musicName);
+                            playListSongArtist.setText(artistName);
+                        }else{
+                            noMusicItemActivity();
+                        }
 
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-
-                    if (music_list.size()>1){
-                        playNext();
-                    }
-
-
                 }
             });
+
+
+            mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener() {
+                @Override
+                public void onCompletion(MediaPlayer mediaPlayer) {
+
+                    if (musicAdapter.getItemCount() > 1){
+                        playNext();
+                    }else{
+                        showPlayingDataItems();
+                    }
+                }
+            });
+
 
 
             cancelAudioPlaying.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    mediaPlayer.stop();
+                    mediaPlayer.reset();
+                    bottomNavigationView.setVisibility(View.INVISIBLE);
+                    floatingButton.show();
+                }
+            });
 
-                    if (mediaPlayer.isPlaying() && mediaPlayer!=null){
 
-                        try {
-                            mediaPlayer.stop();
-                            mediaPlayer.release();
 
-                            bottomNavigationView.setVisibility(View.INVISIBLE);
-                            floatingButton.show();
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
+
+            pausePlay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mediaPlayer.pause();
+
+                    if (count % 2 == 0){
+                        mediaPlayer.start();
+                        pausePlay.setImageResource(R.drawable.ic_pause_icon_white);
+                        playListImage.startAnimation(anim);
+
 
                     }
+                    else {
+                        mediaPlayer.pause();
+                        pausePlay.setImageResource(R.drawable.ic_baseline_play_arrow_24);
+                        playListImage.setAnimation(null);
+                    }
+                    count++;
                 }
             });
 
@@ -283,19 +308,18 @@ public class MusicFragment extends Fragment {
     }
 
     public void playNext() {
-        timer.schedule(new TimerTask() {
-            @Override
-            public void run() {
-                mediaPlayer.reset();
+
+
+        Toast.makeText(getActivity(), "Music first completed and second is in array", Toast.LENGTH_SHORT).show();
                 try {
                     String musicSingleItem =  music_list.get(++i).getMySongs();
                     mediaPlayer.setDataSource(getActivity(),Uri.parse(musicSingleItem));
-
                     mediaPlayer.prepare();
                     mediaPlayer.start();
 
                     String artistName =  music_list.get(++i).getArtist();
                     String musicName =  music_list.get(++i).getSong();
+
                     playListSong.setText(musicName);
                     playListSongArtist.setText(artistName);
 
@@ -303,13 +327,10 @@ public class MusicFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-
-                if (music_list.size() > i+1) {
-                    playNext();
-                }
-            }
-        },mediaPlayer.getDuration()+100);
     }
+
+
+
 
     @Override
     public void onDestroy() {
@@ -319,17 +340,31 @@ public class MusicFragment extends Fragment {
         super.onDestroy();
     }
 
+
+
+
     public void  animateWhilePlaying(){
         anim = new RotateAnimation(0.0f, 360.0f, Animation.RELATIVE_TO_SELF, 0.5f, Animation.RELATIVE_TO_SELF, 0.5f);
         anim.setInterpolator(new LinearInterpolator());
         anim.setRepeatCount(Animation.INFINITE);
         anim.setDuration(2500);
 
-        // Start animating the image
-//        floatingButton.startAnimation(anim);
     }
 
 
+
+    public  void noMusicItemActivity(){
+        Intent intent = new Intent(getActivity(), NoItemActivity.class);
+        startActivity(intent);
+    }
+
+
+    public void showPlayingDataItems(){
+        mediaPlayer.stop();
+        mediaPlayer.reset();
+        bottomNavigationView.setVisibility(View.INVISIBLE);
+        floatingButton.show();
+    }
 
 
 }

@@ -14,13 +14,10 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicViewHolder>{
 
     ArrayList<Music>  music ;
 
-
     // passing the newly created array list to the constructor
     public MusicAdapter(ArrayList<Music>  music_data) {
         this.music = music_data;
     }
-
-
 
     @NonNull
     @Override
@@ -32,7 +29,7 @@ public class MusicAdapter extends RecyclerView.Adapter<MusicViewHolder>{
 
     @Override
     public void onBindViewHolder(@NonNull MusicViewHolder holder, int position) {
-        holder.setdata2(music.get(position));
+        holder.setDataMusic(music.get(position));
     }
 
     @Override
